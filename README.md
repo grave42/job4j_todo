@@ -1,18 +1,26 @@
-# Getting Started
+Проект "TODO список" по курсу Java Middle от job4j.ru
+Приложение для создания заметок, и их редактирования.
 
-### Reference Documentation
+Реалзиованый функционал:
+-Отображение списка заметок
+-Возможность редактировать
+-Удалять
+-Переводить в статус "Выполнено"
 
-For further reference, please consider the following sections:
+Стек технологий: Spring boot, Thymeleaf, Bootstrap, Hibernate, PostgreSql
 
-* [Official Apache Maven documentation](https://maven.apache.org/guides/index.html)
-* [Spring Boot Maven Plugin Reference Guide](https://docs.spring.io/spring-boot/3.3.3/maven-plugin)
-* [Create an OCI image](https://docs.spring.io/spring-boot/3.3.3/maven-plugin/build-image.html)
+Требования к окружению: Java 17, Maven 3.8 и выше, PostgreSQL начиная с 16 версии.
 
-### Maven Parent overrides
+Запуск проекта:
 
-Due to Maven's design, elements are inherited from the parent POM to the project POM.
-While most of the inheritance is fine, it also inherits unwanted elements like `<license>` and `<developers>` from the
-parent.
-To prevent this, the project POM contains empty overrides for these elements.
-If you manually switch to a different parent and actually want the inheritance, you need to remove those overrides.
+1. create database todo;
+2. указать конфигурацию в src/main/resources/application.properties
+3. запустить src/main/java/ru/job4j/cinema/Job4jTodoApplication.java
 
+![img.jpg](img.jpg)
+
+![img_1.jpg](img_1.jpg)
+
+![img_2.jpg](img_2.jpg)
+
+Выполнил Кучеров Филипп  https://github.com/grave42

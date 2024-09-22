@@ -11,6 +11,8 @@ import ru.job4j.todo.model.Task;
 import ru.job4j.todo.service.TaskService;
 
 import java.util.Collection;
+import java.util.Map;
+import java.util.function.Supplier;
 
 @Controller
 @RequestMapping("/alltasks")
@@ -24,19 +26,12 @@ public class TaskController {
 
     @GetMapping
     public String allTasks(@RequestParam(name = "filter", required = false, defaultValue = "all") String filter, Model model) {
-        Collection<Task> tasks;
+        Map<String, Supplier<Collection<Task>>> filterActions = Map.of(
+                "done", () -> taskService.findByDone(true),
+                "new", () -> taskService.findByDone(false)
+        );
 
-        switch (filter) {
-            case "done":
-                tasks = taskService.findByDone(true);
-                break;
-            case "new":
-                tasks = taskService.findByDone(false);
-                break;
-            default:
-                tasks = taskService.findAll();
-                break;
-        }
+        Collection<Task> tasks = filterActions.getOrDefault(filter, taskService::findAll).get();
 
         model.addAttribute("alltasks", tasks);
         return "alltasks/list";
@@ -65,20 +60,35 @@ public class TaskController {
     }
 
     @GetMapping("/delete/{id}")
-    public String deleteTask(@PathVariable int id) {
-        taskService.deleteById(id);
+    public String deleteTask(@PathVariable int id, Model model) {
+        boolean isDeleted = taskService.deleteById(id);
+        if (!isDeleted) {
+            model.addAttribute("message", "Не удалось удалить задачу. Возможно, задача с таким ID не найдена.");
+            return "errors/404";
+        }
         return "redirect:/alltasks";
     }
 
     @PostMapping("/edit/{id}")
     public String editTask(@PathVariable int id, Task taskDetails) {
-        var taskOptional = taskService.findById(id);
-        if (taskOptional.isPresent()) {
-            var task = taskOptional.get();
-            task.setTitle(taskDetails.getTitle());
-            task.setDescription(taskDetails.getDescription());
-            taskService.update(task);
+        if (taskService.findById(id).isPresent()) {
+            var task = taskService.findById(id).get();
+
+            boolean isUpdated = false;
+            if (!task.getTitle().equals(taskDetails.getTitle())) {
+                task.setTitle(taskDetails.getTitle());
+                isUpdated = true;
+            }
+            if (!task.getDescription().equals(taskDetails.getDescription())) {
+                task.setDescription(taskDetails.getDescription());
+                isUpdated = true;
+            }
+
+            if (isUpdated) {
+                taskService.update(task);
+            }
         }
+
         return "redirect:/alltasks";
     }
 
@@ -89,6 +99,12 @@ public class TaskController {
             model.addAttribute("task", taskOptional.get());
             return "alltasks/edit";
         }
+        return "redirect:/alltasks";
+    }
+
+    @PostMapping("/updateDone/{id}")
+    public String updateDone(@PathVariable int id, @RequestParam("done") boolean done) {
+        taskService.updateDoneById(id, done);
         return "redirect:/alltasks";
     }
 }

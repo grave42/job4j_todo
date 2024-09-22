@@ -50,7 +50,8 @@
 
                 <div class="row my-3">
                     <div class="col">
-                        <form th:if="${!task.done}" th:action="@{/alltasks/complete/{taskId}(taskId=${task.id})}" method="post">
+                        <form th:if="${!task.done}" th:action="@{/alltasks/updateDone/{taskId}(taskId=${task.id})}" method="post">
+                            <input type="hidden" name="done" value="true" />
                             <button type="submit" class="btn btn-success">Выполнено</button>
                         </form>
                     </div>

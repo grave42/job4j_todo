@@ -19,4 +19,6 @@ public interface TaskRepository {
     Collection<Task> findByDone(boolean done);
 
     Collection<Task> findAll();
+
+    void updateDoneById(int id, boolean done);
 }

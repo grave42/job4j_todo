@@ -45,4 +45,9 @@ public class TaskServiceImpl implements TaskService {
     public Collection<Task> findAll() {
         return taskRepository.findAll();
     }
+
+    @Override
+    public void updateDoneById(int id, boolean done) {
+        taskRepository.updateDoneById(id, done);
+    }
 }

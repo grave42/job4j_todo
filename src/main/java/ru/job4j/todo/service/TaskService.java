@@ -19,5 +19,5 @@ public interface TaskService {
 
     Collection<Task> findAll();
 
-    void updateDoneById(int id, boolean done);
+    boolean updateDoneById(int id, boolean done);
 }

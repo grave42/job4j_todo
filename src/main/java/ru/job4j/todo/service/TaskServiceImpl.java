@@ -47,7 +47,7 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
-    public void updateDoneById(int id, boolean done) {
-        taskRepository.updateDoneById(id, done);
+    public boolean updateDoneById(int id, boolean done) {
+        return taskRepository.updateDoneById(id, done);
     }
 }

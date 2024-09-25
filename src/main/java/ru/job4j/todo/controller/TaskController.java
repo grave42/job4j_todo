@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.service.TaskService;
 
@@ -71,23 +72,8 @@ public class TaskController {
 
     @PostMapping("/edit/{id}")
     public String editTask(@PathVariable int id, Task taskDetails) {
-        if (taskService.findById(id).isPresent()) {
-            var task = taskService.findById(id).get();
-
-            boolean isUpdated = false;
-            if (!task.getTitle().equals(taskDetails.getTitle())) {
-                task.setTitle(taskDetails.getTitle());
-                isUpdated = true;
-            }
-            if (!task.getDescription().equals(taskDetails.getDescription())) {
-                task.setDescription(taskDetails.getDescription());
-                isUpdated = true;
-            }
-
-            if (isUpdated) {
-                taskService.update(task);
-            }
-        }
+        taskDetails.setId(id);
+        taskService.update(taskDetails);
 
         return "redirect:/alltasks";
     }
@@ -103,8 +89,13 @@ public class TaskController {
     }
 
     @PostMapping("/updateDone/{id}")
-    public String updateDone(@PathVariable int id, @RequestParam("done") boolean done) {
-        taskService.updateDoneById(id, done);
+    public String updateDone(@PathVariable int id, @RequestParam("done") boolean done, RedirectAttributes redirectAttributes) {
+        boolean isUpdated = taskService.updateDoneById(id, done);
+
+        if (!isUpdated) {
+            redirectAttributes.addFlashAttribute("error", "Failed to update task.");
+        }
+
         return "redirect:/alltasks";
     }
 }

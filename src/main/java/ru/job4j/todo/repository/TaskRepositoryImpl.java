@@ -144,22 +144,26 @@ public class TaskRepositoryImpl implements TaskRepository {
     }
 
     @Override
-    public void updateDoneById(int id, boolean done) {
+    public boolean updateDoneById(int id, boolean done) {
         Session session = null;
         Transaction transaction = null;
         try {
             session = sessionFactory.openSession();
             transaction = session.beginTransaction();
+
             Query query = session.createQuery("update Task set done = :done where id = :id");
             query.setParameter("done", done);
             query.setParameter("id", id);
-            query.executeUpdate();
+
+            int result = query.executeUpdate();
+
             transaction.commit();
+            return result > 0;
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }
-            throw new RuntimeException("Error updating task 'done' field", e);
+            return false;
         } finally {
             if (session != null) {
                 session.close();

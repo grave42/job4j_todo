@@ -85,7 +85,7 @@ public class TaskController {
             model.addAttribute("task", taskOptional.get());
             return "alltasks/edit";
         }
-        return "redirect:/alltasks";
+        return "errors/404";
     }
 
     @PostMapping("/updateDone/{id}")
@@ -94,6 +94,7 @@ public class TaskController {
 
         if (!isUpdated) {
             redirectAttributes.addFlashAttribute("error", "Failed to update task.");
+            return "errors/404";
         }
 
         return "redirect:/alltasks";

@@ -147,6 +147,7 @@ public class TaskRepositoryImpl implements TaskRepository {
     public boolean updateDoneById(int id, boolean done) {
         Session session = null;
         Transaction transaction = null;
+        boolean isUpdated = false;
         try {
             session = sessionFactory.openSession();
             transaction = session.beginTransaction();
@@ -156,19 +157,18 @@ public class TaskRepositoryImpl implements TaskRepository {
             query.setParameter("id", id);
 
             int result = query.executeUpdate();
-
             transaction.commit();
-            return result > 0;
+            isUpdated = result > 0;
         } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }
-            return false;
         } finally {
             if (session != null) {
                 session.close();
             }
         }
+        return isUpdated;
     }
 
 }

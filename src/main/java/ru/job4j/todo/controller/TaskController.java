@@ -71,11 +71,17 @@ public class TaskController {
     }
 
     @PostMapping("/edit/{id}")
-    public String editTask(@PathVariable int id, Task taskDetails) {
+    public String editTask(@PathVariable int id, Task taskDetails, Model model, RedirectAttributes redirectAttributes) {
         taskDetails.setId(id);
-        taskService.update(taskDetails);
+        var isUpdated = taskService.update(taskDetails);
+        if (!isUpdated) {
+            redirectAttributes.addFlashAttribute("error", "Не удалось отредактировать задачу. Пожалуйста, попробуйте еще раз.");
+            return "errors/404";
+        }
 
         return "redirect:/alltasks";
+
+
     }
 
     @GetMapping("/edit/{id}")

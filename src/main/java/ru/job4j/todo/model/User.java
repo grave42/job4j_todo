@@ -13,12 +13,6 @@ import java.util.Objects;
 @Table(name = "todo_user")
 public class User {
 
-    public static final Map<String, String> COLUMN_MAPPING = Map.of(
-            "id", "id",
-            "name", "name",
-            "password", "password"
-    );
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
@@ -83,7 +77,7 @@ public class User {
             return false;
         }
         User user = (User) object;
-        return id == user.id && Objects.equals(login, user.login) && Objects.equals(name, user.name) && Objects.equals(password, user.password);
+        return Objects.equals(login, user.login);
     }
 
     @Override

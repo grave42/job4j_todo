@@ -26,8 +26,8 @@ public class UserStoreImpl implements UserStore {
             return Optional.of(user);
         } catch (Exception e) {
             log.error("Error saving user: {}", e.getMessage(), e);
-            return Optional.empty();
         }
+        return Optional.empty();
     }
 
     @Override
